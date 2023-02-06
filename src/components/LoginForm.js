@@ -1,8 +1,28 @@
-import { View, Text, TextInput } from "react-native";
-import Svg, { Path, Rect } from "react-native-svg";
+import { useState } from "react";
+
+import { View, Text, TextInput, Pressable } from "react-native";
+import Svg, { Path } from "react-native-svg";
 import { loginStyles } from "../pages/auth/style/AuthStyles";
+import Checkbox from "expo-checkbox";
 
 const LoginForm = () => {
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const emailInputHandler = (txt) => {
+    setEmail(txt);
+  };
+  const passwordInputHandler = (txt) => {
+    setPassword(txt);
+  };
+
+  const submitHandler = () => {
+    console.log(email);
+    console.log(password);
+  };
+
   return (
     <View style={loginStyles.container}>
       <View>
@@ -38,10 +58,42 @@ const LoginForm = () => {
       <View style={loginStyles.loginForm}>
         <View style={loginStyles.inputField}>
           <Text style={loginStyles.inputLabel}>E-Posta Adresi</Text>
-          <TextInput placeholder="E-postanızı girin"></TextInput>
+          <TextInput
+            placeholder="E-postanızı girin"
+            value={email}
+            onChangeText={emailInputHandler}
+            style={loginStyles.inputText}
+          ></TextInput>
+
           <Text style={loginStyles.inputLabel}>Şifre</Text>
-          <TextInput placeholder="****"></TextInput>
+          <TextInput
+            placeholder="****"
+            value={password}
+            onChangeText={passwordInputHandler}
+            style={loginStyles.inputText}
+          ></TextInput>
+
+          <View style={loginStyles.flexRow}>
+            <Checkbox
+              style={loginStyles.checkbox}
+              value={toggleCheckBox}
+              color={"white"}
+            />
+            <Text style={loginStyles.checkboxLabel}>Beni Hatırla</Text>
+          </View>
+
+          <Pressable style={loginStyles.loginBtn} onPress={submitHandler}>
+            <Text style={loginStyles.BtnText}>Giriş Yap</Text>
+          </Pressable>
         </View>
+
+        <Text style={[loginStyles.txt, loginStyles.underline]}>
+          Şifremi Unuttum
+        </Text>
+        <Text style={loginStyles.txt}>
+          Hesabınız yok mu?{" "}
+          <Text style={loginStyles.underline}>Hesap Oluşturun</Text>
+        </Text>
       </View>
     </View>
   );

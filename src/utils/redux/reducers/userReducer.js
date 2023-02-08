@@ -25,7 +25,10 @@ export const userReducer = createSlice({
       state.credentials.surname = "";
     },
     logOut: (state) => {
-      state = initialState;
+      state.token = state.token = "";
+      state.credentials =  {
+        name: "",
+      } 
     },
   },
 });

@@ -1,15 +1,35 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import React from "react";
 
 import Svg, { Path } from "react-native-svg";
 import { useNavigation } from "@react-navigation/native";
 
+import { FontAwesome5 } from '@expo/vector-icons';
+import { drawerStyles } from "./styles/drawerStyles";
+import { useDispatch } from "react-redux";
+import { logOut } from "../utils/redux/reducers/userReducer";
+import Toast from 'react-native-toast-message';
+
 export default function CustomDrawer(props) {
   const routeList = props.state.routes;
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const iconList = ["shopping-basket", "book", "cookie-bite"];
+
+  const logoutHandler = () => {
+    dispatch(logOut());
+    console.log("Logout successful");
+    Toast.show({
+      type: 'success',
+      text1: 'Başarıyla çıkış yaptınız'
+    });
+  }
 
   return (
+    
     <View style={{ paddingLeft: 10, backgroundColor: "#FCFFE7", flex: 1 }}>
+      <SafeAreaView>
       <Svg
         width="190"
         height="72"
@@ -32,17 +52,30 @@ export default function CustomDrawer(props) {
           stroke-linecap="round"
         />
       </Svg>
-
-      {routeList.map((item) => {
+    
+      {routeList.map((item, index) => {
         return (
           <TouchableOpacity
             onPress={() => navigation.navigate(item.name)}
             key={item.name}
           >
-            <Text> {item.name}</Text>
+            <View style={drawerStyles.navLink}>
+            <FontAwesome5 name={iconList[index]} size={24} color="black" />
+            <Text style={drawerStyles.navText}> {item.name}</Text>
+            </View>
           </TouchableOpacity>
         );
       })}
+
+      <TouchableOpacity onPress={logoutHandler}>
+      <View style={drawerStyles.navLink}>
+            <FontAwesome5 name={"door-open"} size={24} color="black" />
+            <Text style={drawerStyles.navText}> Çıkış</Text>
+            </View>
+      </TouchableOpacity>
+      
+      </SafeAreaView>
     </View>
+   
   );
 }

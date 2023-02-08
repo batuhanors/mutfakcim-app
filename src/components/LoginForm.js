@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { Dimensions } from "react-native";
 
 import {
   View,
@@ -12,7 +11,7 @@ import Svg, { Path } from "react-native-svg";
 import { loginStyles } from "../pages/auth/style/AuthStyles";
 import Checkbox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
-import { login, deneme } from "../utils/service/loginServices";
+import { login } from "../utils/service/loginServices";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectUserToken,
@@ -20,13 +19,14 @@ import {
   setToken,
 } from "../utils/redux/reducers/userReducer";
 import jwtDecode from "jwt-decode";
+import Toast from 'react-native-toast-message';
 
 const LoginForm = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [email, setEmail] = useState("batuhanors98@gmail.com");
   const [password, setPassword] = useState("016791775Bo");
 
-  const userToken = useSelector(selectUserToken);
+
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
@@ -45,9 +45,21 @@ const LoginForm = () => {
         const decodedToken = jwtDecode(token);
         dispatch(setCredentials(decodedToken.name));
         dispatch(setToken(token));
+      }).then(() => {
+        Toast.show({
+          type: 'success',
+          text1: 'Başarılı! ',
+          text2: 'Hesabınıza başarıyla giriş yaptınız👋',
+          visibilityTime: 2000
+        });
       })
       .catch((err) => {
         console.log(err);
+        Toast.show({
+          type: 'error',
+          text1: 'Bir şeyler yanlış gitti! ',
+          text2: 'E-posta adresi veya şifre yanlış'
+        });
       });
   };
 

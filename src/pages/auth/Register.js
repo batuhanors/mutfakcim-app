@@ -1,23 +1,20 @@
 import { useRef, useEffect } from "react";
-import { View, ScrollView, Keyboard } from "react-native";
-import LoginForm from "../../components/LoginForm";
-import { Dimensions } from "react-native";
+import { ScrollView, Dimensions, Keyboard } from "react-native";
+
+import RegisterForm from "../../components/RegisterForm";
 import AuthLayout from "../../layout/AuthLayout";
 
-const Login = () => {
-  const windowHeight = Dimensions.get("window").height;
+const Register = () => {
+  const windowHeight = Dimensions.get("window").height - 540;
   const scrollRef = useRef();
 
   const scrollHandler = () => {
-    if (scrollRef.current?.scrollTo) {
-      scrollRef.current?.scrollTo({
-        y: windowHeight,
-        animated: true,
-      });
-    }
+    scrollRef.current?.scrollTo({
+      y: windowHeight,
+      animated: true,
+    });
   };
 
-  // KEYBOARD LISTENER!
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -28,10 +25,7 @@ const Login = () => {
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => {
-        scrollRef.current?.scrollTo({
-          y: 0,
-          animated: true,
-        });
+        //console.log("Keyboard closed");
       }
     );
 
@@ -44,10 +38,10 @@ const Login = () => {
   return (
     <AuthLayout>
       <ScrollView ref={scrollRef}>
-        <LoginForm />
+        <RegisterForm />
       </ScrollView>
     </AuthLayout>
   );
 };
 
-export default Login;
+export default Register;

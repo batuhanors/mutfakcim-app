@@ -1,21 +1,16 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-
-import Login from "./src/pages/auth/Login";
+import AppLayout from "./src/layout/AppLayout";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Provider } from "react-redux";
+import { store } from "./src/utils/redux/store";
+import DrawerNav from "./src/utils/navigation/DrawerNav";
+import AppContainer from "./AppContainer";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Login />
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <AppContainer />
+    </Provider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    width: "100%",
-  },
-});
+// return <AppLayout />;

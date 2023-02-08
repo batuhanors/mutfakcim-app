@@ -1,35 +1,24 @@
-import { useState, useEffect, useRef } from "react";
-import { Dimensions } from "react-native";
-
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useState } from "react";
 import {
   View,
   Text,
+  KeyboardAvoidingView,
   TextInput,
   Pressable,
-  KeyboardAvoidingView,
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
+
 import { loginStyles } from "../pages/auth/style/AuthStyles";
-import Checkbox from "expo-checkbox";
-import { useNavigation } from "@react-navigation/native";
-import { login, deneme } from "../utils/service/loginServices";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selectUserToken,
-  setCredentials,
-  setToken,
-} from "../utils/redux/reducers/userReducer";
-import jwtDecode from "jwt-decode";
 
-const LoginForm = () => {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const [email, setEmail] = useState("batuhanors98@gmail.com");
-  const [password, setPassword] = useState("016791775Bo");
-
-  const userToken = useSelector(selectUserToken);
+const RegisterForm = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const navigation = useNavigation();
+  const props = useRoute();
 
-  const dispatch = useDispatch();
+  //  Input Handlerss  //
 
   const emailInputHandler = (txt) => {
     setEmail(txt);
@@ -37,18 +26,16 @@ const LoginForm = () => {
   const passwordInputHandler = (txt) => {
     setPassword(txt);
   };
+  const nameInputHandler = (txt) => {
+    setName(txt);
+  };
 
-  const submitHandler = async () => {
-    await login(email, password)
-      .then((res) => {
-        const token = res.data.accessToken;
-        const decodedToken = jwtDecode(token);
-        dispatch(setCredentials(decodedToken.name));
-        dispatch(setToken(token));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  // ********* SUBMIT FORM ********* //
+
+  const submitHandler = () => {
+    console.log(email);
+    console.log(password);
+    console.log(name);
   };
 
   return (
@@ -77,17 +64,18 @@ const LoginForm = () => {
           />
         </Svg>
       </View>
-      <Text style={loginStyles.loginHeader}> Hoşgeldiniz.</Text>
-      <Text style={loginStyles.loginTxt}>
+
+      <Text style={loginStyles.registerHeader}> Hemen Kayıt Oluşturun. </Text>
+      <Text style={loginStyles.registerTxt}>
         {" "}
-        Sizi tekrar burada görmek çok güzel!{" "}
+        Seni burada görmek çok güzel.
       </Text>
 
       <View style={loginStyles.loginForm}>
         <KeyboardAvoidingView style={loginStyles.inputField}>
           <Text style={loginStyles.inputLabel}>E-Posta Adresi</Text>
           <TextInput
-            placeholder="E-postanızı girin"
+            placeholder="E-posta"
             value={email}
             onChangeText={emailInputHandler}
             style={loginStyles.inputText}
@@ -102,29 +90,32 @@ const LoginForm = () => {
             style={loginStyles.inputText}
           ></TextInput>
 
-          <View style={loginStyles.flexRow}>
-            <Checkbox
-              style={loginStyles.checkbox}
-              value={toggleCheckBox}
-              color={"white"}
-            />
-            <Text style={loginStyles.checkboxLabel}>Beni Hatırla</Text>
-          </View>
+          <Text style={loginStyles.inputLabel}>Şifre Tekrar</Text>
+          <TextInput
+            placeholder="****"
+            value=""
+            secureTextEntry={true}
+            style={loginStyles.inputText}
+          ></TextInput>
 
-          <Pressable style={loginStyles.loginBtn} onPress={submitHandler}>
-            <Text style={loginStyles.BtnText}>Giriş Yap</Text>
+          <Text style={loginStyles.inputLabel}>Size Nasıl Hitap Edelim? </Text>
+          <TextInput
+            placeholder="İsminiz"
+            value={name}
+            onChangeText={nameInputHandler}
+            style={loginStyles.inputText}
+          ></TextInput>
+
+          <Pressable style={loginStyles.registerBtn} onPress={submitHandler}>
+            <Text style={loginStyles.BtnText}>Hemen Kayıt Ol!</Text>
           </Pressable>
         </KeyboardAvoidingView>
 
-        <Text style={[loginStyles.txt, loginStyles.underline]}>
-          Şifremi Unuttum
-        </Text>
-
         <View style={[loginStyles.flexRow, { marginTop: 24 }]}>
-          <Text style={loginStyles.txt}>Hesabınız yok mu? </Text>
-          <Pressable onPress={() => navigation.navigate("RegisterScreen")}>
+          <Text style={loginStyles.txt}>Hesabınız var mı? </Text>
+          <Pressable onPress={() => navigation.pop()}>
             <Text style={[loginStyles.underline, loginStyles.txt]}>
-              Hesap Oluşturun
+              Giriş Yapın
             </Text>
           </Pressable>
         </View>
@@ -133,4 +124,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

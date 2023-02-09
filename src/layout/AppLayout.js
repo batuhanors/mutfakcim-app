@@ -6,10 +6,14 @@ import { layoutStyles } from "./layoutstyle";
 
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { x } from "react-native";
+import { useSelector } from "react-redux";
+import { selectUserName } from "../utils/redux/reducers/userReducer";
+
 
 const AppLayout = () => {
   const navigation = useNavigation();
+
+  const username = useSelector(selectUserName);
   return (
     <SafeAreaView>
       <View style={layoutStyles.topBar}>
@@ -20,7 +24,7 @@ const AppLayout = () => {
           onPress={() => navigation.openDrawer()}
           style={layoutStyles.menuIcon}
         />
-        <Text> Merhaba Batuhan 👋</Text>
+        <Text> Merhaba {username} 👋</Text>
       </View>
       </SafeAreaView>
   );

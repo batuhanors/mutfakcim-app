@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { shopStyles } from "./style/shopStyles";
 
 import { DataTable } from 'react-native-paper';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUserToken } from "../../utils/redux/reducers/userReducer";
-import { getShops } from "../../utils/service/appServices";
+import { addShops, getShops } from "../../utils/service/appServices";
 import ShopCard from "../../components/ShopCard";
 
 import { AntDesign } from '@expo/vector-icons'; 
+import { selectProductName, setCategory, setName, setPrice, setUnit } from "../../utils/redux/reducers/shopReducer";
 
 
 const AddShop = () => {
@@ -18,6 +19,12 @@ const AddShop = () => {
   const [productPrice, setProductPrice] = useState("");
   const [productUnit, setProductUnit] = useState("");
   const [productCategory, setProductCategory] = useState("");
+  const [addList, setAddList] = useState([]);
+
+  const dispatch = useDispatch();
+  const name = useSelector(selectProductName);
+
+
 
   const pressHandler = () => {
     setOpenModal(true)
@@ -29,10 +36,16 @@ const AddShop = () => {
   const categoryHandler = (text) => setProductCategory(text);
 
   const addHandler = () => {
-    console.log(productName);
-    console.log(productPrice);
-    console.log(productUnit);
-    console.log(productCategory);
+
+    const listItem = {
+      id: Math.random(),
+      name: productName,
+      price: productPrice,
+      unit: productUnit,
+      category: productCategory
+    };
+
+    setAddList(addList => [...addList, listItem]);
 
     setProductName("");
     setProductPrice("");
@@ -48,9 +61,11 @@ const AddShop = () => {
       </View>
       <View style={shopStyles.flexRow}>
         <Pressable onPress={pressHandler} style={{flex: 1, marginHorizontal: 2 }}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Ürün Ekle</Text></Pressable>
-        <Pressable onPress={pressHandler} style={{flex: 1, marginHorizontal: 2}}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Geçmişten Ürün Ekle</Text></Pressable>
-        <Pressable onPress={pressHandler} style={{flex: 1, marginHorizontal: 2}}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Hızlı Ürün Ekle</Text></Pressable>
+        <Pressable  style={{flex: 1, marginHorizontal: 2}}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Geçmişten Ürün Ekle</Text></Pressable>
+        <Pressable  style={{flex: 1, marginHorizontal: 2}}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Hızlı Ürün Ekle</Text></Pressable>
       </View>
+
+      <ShopTable list={addList}/>
 
         <Modal visible={openModal} transparent={true} onRequestClose={()=> setOpenModal(false)} animationType="fade"> 
       <View style={shopStyles.centeredDiv}>
@@ -75,7 +90,14 @@ const AddShop = () => {
   )
 }
 
-const ShopTable = () => {
+const ShopTable = (props) => {
+
+  const saveHandler = (list) => {
+
+   addShops(list)
+
+  }
+
   return (
     <View>
     <View style={shopStyles.tableContainer}>
@@ -86,30 +108,25 @@ const ShopTable = () => {
         <DataTable.Title>Birim</DataTable.Title>
         <DataTable.Title>Kategori</DataTable.Title>
       </DataTable.Header>
-      <DataTable.Row>
-        <DataTable.Cell>Ekmek</DataTable.Cell>
-        <DataTable.Cell>8.25₺</DataTable.Cell>
-        <DataTable.Cell>3 Tane</DataTable.Cell>
-        <DataTable.Cell>Unlu Mamüller</DataTable.Cell>
-      </DataTable.Row>
+
+      {
+        props.list.map((item) => {
+          return (
+            <DataTable.Row key={item.id}>
+            <DataTable.Cell>{item.name}</DataTable.Cell>
+            <DataTable.Cell>{item.price}</DataTable.Cell>
+            <DataTable.Cell>{item.unit}</DataTable.Cell>
+            <DataTable.Cell>{item.category}</DataTable.Cell>
+          </DataTable.Row>
+          )
+        } )
+      }
   
-      <DataTable.Row>
-        <DataTable.Cell>Makarna</DataTable.Cell>
-        <DataTable.Cell>16.90₺</DataTable.Cell>
-        <DataTable.Cell>1 Tane</DataTable.Cell>
-        <DataTable.Cell>Temel Gıda</DataTable.Cell>
-      </DataTable.Row>
-      <DataTable.Row>
-        <DataTable.Cell>Limonata</DataTable.Cell>
-        <DataTable.Cell>9.90₺</DataTable.Cell>
-        <DataTable.Cell>2 L</DataTable.Cell>
-        <DataTable.Cell>İçecek</DataTable.Cell>
-      </DataTable.Row>
     </DataTable>
     </View>
 
     <View style={shopStyles.saveShopBtn}>
-      <Pressable><Text style={shopStyles.btnText}>Alışverişi Kaydet</Text></Pressable>
+      <Pressable onPress={() => saveHandler(props.list)}><Text style={shopStyles.btnText}>Alışverişi Kaydet</Text></Pressable>
     </View>
 
 
@@ -142,7 +159,6 @@ export default function ShopScreen() {
     <View style={shopStyles.shopContainer}>
     <ScrollView>
       <AddShop />
-      <ShopTable />
       <View>
       <Text style={shopStyles.shopHeader}>Alışverişlerim</Text>
      

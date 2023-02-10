@@ -18,7 +18,7 @@ export default function DrawerNav() {
     <NavigationContainer>
       <Drawer.Navigator
         initialRouteName="Shops"
-        screenOptions={{ header: (props) => <AppLayout {...props} /> }}
+        screenOptions={{ header: (props) => <AppLayout {...props} />, drawerActiveBackgroundColor: "#76B852" }}
         drawerContent={(props) => <CustomDrawer {...props} />}
       >
         <Drawer.Screen name="Alışveriş" component={ShopScreen} />

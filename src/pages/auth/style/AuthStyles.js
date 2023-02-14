@@ -35,6 +35,7 @@ export const loginStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     marginBottom: 32,
+    fontFamily: "Roboto"
   },
   registerTxt: {
     textAlign: "center",

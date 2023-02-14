@@ -23,8 +23,8 @@ import Toast from 'react-native-toast-message';
 
 const LoginForm = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const [email, setEmail] = useState("batuhanors98@gmail.com");
-  const [password, setPassword] = useState("016791775Bo");
+  const [email, setEmail] = useState("user@mail.com");
+  const [password, setPassword] = useState("123456");
 
 
   const navigation = useNavigation();

@@ -18,8 +18,18 @@ export const getInventory = (jwt) => {
     return apiClient.post("shops/inventory", userToken);
 }
 
-export const addShops = (shopList) => {
+export const addShops = (shopList, jwt) => {
+    const list = {
+        token: jwt,
+        list: shopList
+    }
 
-    console.log(shopList);
+    return apiClient.post("shops/createShop", list);
+}
+
+export const deleteShop = (id, jwt) => {
+    const userToken = setJwt(jwt);
+
+    return apiClient.delete(`shops/${id}`, userToken);
 }
 

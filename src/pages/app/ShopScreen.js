@@ -1,4 +1,4 @@
-import { View, Text, Pressable, ScrollView, Modal, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
+import { View, Text, Pressable, ScrollView, Modal, TextInput, TouchableOpacity, SafeAreaView, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import { shopStyles } from "./style/shopStyles";
 
@@ -9,7 +9,8 @@ import { addShops, getShops } from "../../utils/service/appServices";
 import ShopCard from "../../components/ShopCard";
 
 import { AntDesign } from '@expo/vector-icons'; 
-import { selectProductName, setCategory, setName, setPrice, setUnit } from "../../utils/redux/reducers/shopReducer";
+import { selectProductName } from "../../utils/redux/reducers/shopReducer";
+import Toast from 'react-native-toast-message';
 
 
 const AddShop = () => {
@@ -60,12 +61,12 @@ const AddShop = () => {
         <Text style={shopStyles.addShopText}>Alışveriş Ekle</Text>
       </View>
       <View style={shopStyles.flexRow}>
-        <Pressable onPress={pressHandler} style={{flex: 1, marginHorizontal: 2 }}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Ürün Ekle</Text></Pressable>
-        <Pressable  style={{flex: 1, marginHorizontal: 2}}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Geçmişten Ürün Ekle</Text></Pressable>
-        <Pressable  style={{flex: 1, marginHorizontal: 2}}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Hızlı Ürün Ekle</Text></Pressable>
+        <Pressable onPress={pressHandler} style={{ marginHorizontal: 2 }}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Ürün Ekle</Text></Pressable>
+        <Pressable  style={{ marginHorizontal: 2}}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Geçmişten Ürün Ekle</Text></Pressable>
+        <Pressable  style={{ marginHorizontal: 2}}><Text style={[shopStyles.addShopBtn, shopStyles.btnText]}>Hızlı Ürün Ekle</Text></Pressable>
       </View>
 
-      <ShopTable list={addList}/>
+      <ShopTable list={addList} setList={setAddList}/>
 
         <Modal visible={openModal} transparent={true} onRequestClose={()=> setOpenModal(false)} animationType="fade"> 
       <View style={shopStyles.centeredDiv}>
@@ -91,10 +92,19 @@ const AddShop = () => {
 }
 
 const ShopTable = (props) => {
+  const token = useSelector(selectUserToken);
+
 
   const saveHandler = (list) => {
 
-   addShops(list)
+   addShops(list, token).then((res) => {
+      props.setList([]);
+      Toast.show({
+        type: 'success',
+        text1: 'Başarılı!',
+        text2: 'Alışverişinizi başarıyla kaydettik 👍🏻'
+      });
+   })
 
   }
 
@@ -139,9 +149,10 @@ export default function ShopScreen() {
   const token = useSelector(selectUserToken);
 
   const [shopList, setShopList] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
-    FetchShop();
+    FetchShop()
   }, []);
   
   const FetchShop = async () => {
@@ -149,15 +160,26 @@ export default function ShopScreen() {
       const data = res.data;
       setShopList(data)
     }).catch((err) => {
-      console.log(err);
+   //
     })
   }
   useEffect( () => {
+    FetchShop();
   }, [shopList]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    FetchShop().then(() => {
+      setRefreshing(false);
+    })
+  }, []);
+
 
   return (
     <View style={shopStyles.shopContainer}>
-    <ScrollView>
+    <ScrollView refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
       <AddShop />
       <View>
       <Text style={shopStyles.shopHeader}>Alışverişlerim</Text>
@@ -166,7 +188,7 @@ export default function ShopScreen() {
 
     {
       shopList.map((item, index) =>{
-        return <ShopCard data={item} key={index}/>
+        return <ShopCard data={item} index={index} key={index}/>
       })
     }
     </ScrollView>

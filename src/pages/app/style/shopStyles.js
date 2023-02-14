@@ -57,6 +57,7 @@ export const shopStyles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     flexRow: {
+        flex: 1,
         flexDirection: "row",
         justifyContent: "space-around",
         flexWrap: "wrap",
@@ -73,9 +74,8 @@ export const shopStyles = StyleSheet.create({
     addShopBtn: {
         backgroundColor: "#76B852",
         paddingHorizontal: 4,
-        paddingVertical: 8,
-        fontSize: 16,
-        borderRadius: 4,
+        paddingVertical: 16,
+        fontSize: 15,
     },
     addShopText: {
         fontSize: 17,

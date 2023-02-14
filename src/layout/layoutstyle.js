@@ -10,4 +10,9 @@ export const layoutStyles = StyleSheet.create({
     paddingVertical: 8,
     backgroundColor: "#FCFFE7",
   },
+  text: {
+    flexDirection:"row",
+    alignItems:"center",
+    justifyContent:"center",
+  }
 });

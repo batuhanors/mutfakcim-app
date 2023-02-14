@@ -1,7 +1,6 @@
 import React from "react";
 
-import { View, Text, SafeAreaView } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import { layoutStyles } from "./layoutstyle";
 
 import { Feather } from "@expo/vector-icons";
@@ -24,7 +23,13 @@ const AppLayout = () => {
           onPress={() => navigation.openDrawer()}
           style={layoutStyles.menuIcon}
         />
-        <Text> Merhaba {username} 👋</Text>
+        <View style={layoutStyles.text}>
+          <Text>Merhaba</Text>
+          <TouchableOpacity style={{marginHorizontal:4}} onPress={() => navigation.navigate("Ayarlar")}>
+            <Text style={{color: "#1F8A70"}}>{username}</Text>
+          </TouchableOpacity>
+          <Text>👋</Text>
+        </View>
       </View>
       </SafeAreaView>
   );

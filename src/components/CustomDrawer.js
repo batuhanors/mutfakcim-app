@@ -15,7 +15,7 @@ export default function CustomDrawer(props) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const iconList = ["shopping-basket", "book", "cookie-bite"];
+  const iconList = ["shopping-basket", "book", "cookie-bite", "user-cog"];
 
   const logoutHandler = () => {
     dispatch(logOut());
